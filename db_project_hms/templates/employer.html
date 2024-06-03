@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>employer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="..\static\style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+    <header class="header-area">
+        <!-- Nav Area -->
+        <div class="original-nav-area" id="stickyNav">
+            <div class="classy-nav-container breakpoint-off">
+                <div class="container">
+                    <!-- Classy Menu -->
+                    <nav class="classy-navbar justify-content-between">
+
+                        <!-- Subscribe btn -->
+                        <div class="subscribe-btn">
+                            <a href="employer" class="btn subscribe-btn" >employer</a>
+                        </div>
+
+                        <!-- Navbar Toggler -->
+                        <div class="classy-navbar-toggler">
+                            <span class="navbarToggler"><span></span><span></span><span></span></span>
+                        </div>
+
+                        <!-- Menu -->
+                        <div class="classy-menu" id="originalNav">
+                            <!-- close btn -->
+                            <div class="classycloseIcon">
+                                <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                            </div>
+
+                            <!-- Nav Start -->
+                            <div class="classynav">
+                                <ul>
+                                    <li><a href="patient">patient</a></li>
+                                    <li><a href="employer">employer</a></li>
+                                    <li><a href="bed">bed</a></li>
+                                </ul>
+                            </div>
+                            <!-- Nav End -->
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="logo-area text-center">
+            <div class="container h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-12">
+                        <a href="index.html" class="original-logo"><img src="img/core-img/logo.png" alt=""></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <header class="header-area">
+        
+        <div class="original-nav-area" id="stickyNav">
+            <div class="classy-nav-container breakpoint-off">
+                <div class="container">
+                    <!-- Classy Menu -->
+                    <nav class="classy-navbar justify-content-between">
+
+                        <div class="subscribe-btn">
+                            <a class="btn subscribe-btn">employer Table</a>
+                        </div>
+
+                        <!-- Navbar Toggler -->
+                        <div class="classy-navbar-toggler">
+                            <span class="navbarToggler"><span></span><span></span><span></span></span>
+                        </div>
+
+                        <!-- Menu -->
+                        <div class="classy-menu" id="originalNav">
+                            <!-- close btn -->
+                            <div class="classycloseIcon">
+                                <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                            </div>
+
+                            <!-- Nav Start -->
+                            <div class="classynav">
+                                <button id="add-staff-btn" class="btn original-btn">Add employer</button>
+                                <!-- Search Form  -->
+                                <div id="search-wrapper">
+                                    <form action="#">
+                                        
+                                        <input type="text" id="search-staff" placeholder="Search something...">
+                                        <div id="close-icon"></div>
+                                        <input class="d-none" type="submit" value="">
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- Nav End -->
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <table id="staff-table" class="md-table">
+        <thead>
+            <tr>
+                <th>Staff ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Role</th>
+                <th>Department</th>
+                <th>Contact Info</th>
+                <th>Qualifications</th>
+                <th>Shift Schedule</th>
+                <th>Password</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for staff in staffs %}
+            <tr>
+                <td>{{ staff.staff_id }}</td>
+                <td>{{ staff.first_name }}</td>
+                <td>{{ staff.last_name }}</td>
+                <td>{{ staff.role }}</td>
+                <td>{{ staff.department }}</td>
+                <td>{{ staff.contact_info }}</td>
+                <td>{{ staff.qualifications }}</td>
+                <td>{{ staff.shift_schedule }}</td>
+                <td>{{ staff.password }}</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            ...
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <div>
+                                <form action="{{ url_for('edit_staff') }}" method="post">
+                                    <input type="hidden" name="staff_id" value="{{ staff.staff_id }}">
+                                    <button class="dropdown-item" type="submit">Edit</button>
+                                </form>
+                            </div>
+                            <div>
+                                <form action="{{ url_for('delete_staff') }}" method="post">
+                                    <input type="hidden" name="staff_id" value="{{ staff.staff_id }}">
+                                    <button class="dropdown-item" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Add Patient Form -->
+    <!-- Include your Add Patient form here -->
+    <script>
+        $(document).ready(function() {
+            loadPatientsData();
+        });
+        function loadPatientsData() {
+            $.getJSON('/staff_data', function(data) {
+                $.each(data, function(key, value) {
+                    var row = $('<tr></tr>');
+                    row.append($('<td></td>').text(value.staff_id));
+                    row.append($('<td></td>').text(value.first_name));
+                    row.append($('<td></td>').text(value.last_name));
+                    row.append($('<td></td>').text(value.role)); // Display only the date part
+                    row.append($('<td></td>').text(value.department));
+                    row.append($('<td></td>').text(value.contact_info));
+                    row.append($('<td></td>').text(value.qualifications));
+                    row.append($('<td></td>').text(value.shift_schedule));
+                    row.append($('<td></td>').text(value.password));
+                    var dropdown = $('<div></div>').addClass('dropdown');
+                    var dropdownButton = $('<button></button>')
+                        .addClass('btn btn-secondary dropdown-toggle')
+                        .attr('type', 'button')
+                        .attr('data-toggle', 'dropdown')
+                        .attr('aria-haspopup', 'true')
+                        .attr('aria-expanded', 'false')
+                        .text('...');
+                    dropdown.append(dropdownButton);
+
+                    var dropdownMenu = $('<div></div>').addClass('dropdown-menu');
+
+                    // Create "Edit" button
+                    var editButton = $('<button></button>')
+                        .addClass('dropdown-item edit-button')
+                        .attr('type', 'button')
+                        .text('Edit');
+                    dropdownMenu.append(editButton);
+
+                    // Create "Delete" form
+                    var deleteForm = $('<form></form>')
+                        .attr('action', '/delete_patient')
+                        .attr('method', 'post');
+                    deleteForm.append($('<input>').attr('type', 'hidden').attr('name', 'staff_id').attr('value', value.staff_id));
+                    deleteForm.append($('<button>').addClass('dropdown-item').attr('type', 'submit').text('Delete'));
+                    dropdownMenu.append(deleteForm);
+
+                    dropdown.append(dropdownMenu);
+                    row.append($('<td></td>').append(dropdown));
+                    $('#staff-table').append(row);
+                });
+            });
+        }
+        $(document).on('click', '#add-staff-btn', function() {
+            if ($('#staff-table #confirm-add').length > 0) { return;}
+            var lastStafftId = $('#staff-table tr:last td:first').text();
+            var newStaffId = parseInt(lastStafftId) + 1;
+
+            var newRow = $('<tr></tr>');
+            newRow.append($('<td></td>').text(newStaffId)); // Placeholder for staff_id
+            newRow.append($('<td><input type="text" name="first_name"></td>'));
+            newRow.append($('<td><input type="text" name="last_name"></td>'));
+            newRow.append($('<td><select name="role"><option value="Doctor">Doctor</option><option value="Nurse">Nurse</option><option value="Technician">Technician</option><option value="Administrative">Administrative</option></select></td>'));
+            newRow.append($('<td><select name="department">{% for ward_name in ward_names %}<option value="{{ ward_name[0] }}">{{ ward_name[0] }}</option>{% endfor %}</select></td>'));
+            newRow.append($('<td><input type="text" name="contact_info"></td>'));
+            newRow.append($('<td><input type="text" name="qualificatoins"></td>'));
+            newRow.append($('<td><select name="shift_schedule"><option value="Day">Day</option><option value="Night">Night</option></select></td>'));
+            newRow.append($('<td><input type="text" name="password"></td>'));
+            var actionCell = $('<td></td>');
+            var confirmButton = $('<button></button>')
+                .addClass('btn btn-primary')
+                .attr('id', 'confirm-add')
+                .text('Confirm');
+            var cancelButton = $('<button></button>')
+                .addClass('btn btn-secondary')
+                .attr('id', 'cancel-add')
+                .text('Cancel');
+            actionCell.append(confirmButton).append(cancelButton);
+            newRow.append(actionCell);
+
+            $('#staff-table tr:first').after(newRow);
+        });
+
+        $(document).on('click', '#confirm-add', function() {
+            var row = $(this).closest('tr');
+            var data = {
+                staff_id: row.find('td:first').text(),
+                first_name: row.find('input[name="first_name"]').val(),
+                last_name: row.find('input[name="last_name"]').val(),
+                role: row.find('select[name="role"]').val(),
+                department: row.find('select[name="department"]').val(),
+                contact_info: row.find('input[name="contact_info"]').val(),
+                qualifications: row.find('input[name="qualifications"]').val(),
+                shift_schedule: row.find('select[name="shift_schedule"]').val(),
+                password: row.find('input[name="password"]').val(),
+            };
+
+            $.post('/add_staff', data, function(response) {
+                if (response.message === 'staff added successfully') {
+                    alert('staff added successfully');
+                    location.reload(); // Reload the page to reflect the changes
+                } else {
+                    alert('Error adding staff');
+                }
+            });
+        });
+
+        $(document).on('click', '#cancel-add', function() {
+            $(this).closest('tr').remove();
+        });
+        $(document).on('click', '.edit-button', function(e) {
+                e.preventDefault();
+                var row = $(this).closest('tr');
+                var cells = row.find('td:not(:last-child, :first-child)');
+                var fieldNames = ['first_name', 'last_name', 'role', 'department', 'contact_info', 'qualifications', 'shift_schedule'];
+                // Convert cells to input fields
+                cells.each(function(index) {
+                    var cell = $(this);
+                    var text = cell.text();
+                    if (index === 2) { // gender
+                        cell.html('<select name="role"><option value="Doctor">Doctor</option><option value="Nurse">Nurse</option><option value="Technician">Technician</option><option value="Administrative">Administrative</option></select>');
+                        cell.find('select').val(text); // Set the current value
+                    } else if (index === 3) { // department
+                        cell.html('<select name="department">{% for ward_name in ward_names %}<option value="{{ ward_name[0] }}">{{ ward_name[0] }}</option>{% endfor %}</select>');
+                        cell.find('select').val(text); // Set the current value
+                    } else if (index === 6) { // gender
+                        cell.html('<select name="shift_schedule"><option value="Day">Day</option><option value="Night">Night</option></select>');
+                        cell.find('select').val(text); // Set the current value
+                    } else {
+                        cell.html('<input type="text" value="' + text + '">');
+                    }
+                });
+                $(this).remove();
+
+                // Add "Confirm" and "Cancel" buttons directly to the last cell
+                var lastCell = row.find('td:last-child');
+                lastCell.empty(); // Clear the last cell
+
+                var confirmButton = $('<button></button>')
+                    .addClass('btn btn-primary')
+                    .attr('id', 'confirm')
+                    .text('Confirm');
+                lastCell.append(confirmButton);
+
+                var cancelButton = $('<button></button>')
+                    .addClass('btn btn-secondary')
+                    .attr('id', 'cancel')
+                    .text('Cancel');
+                lastCell.append(cancelButton);
+            });
+            $(document).on('click', '#confirm, #cancel', function(e) {
+                var row = $(this).closest('tr');
+                var data = {
+                    staff_id: row.find('td:first').text(),
+                    first_name: row.find('input').eq(0).val(),
+                    last_name: row.find('input').eq(1).val(),
+                    role: row.find('select').eq(0).val(),
+                    department: row.find('select').eq(1).val(),
+                    contact_info: row.find('input').eq(2).val(),
+                    qualifications: row.find('input').eq(3).val(),
+                    shift_schedule: row.find('select').eq(2).val(),
+                    password: row.find('input').eq(4).val(),
+                };
+                $.post('/edit_staff', data, function(response) {
+                if (response.message === 'Staff updated successfully') {
+                    alert('Staff updated successfully');
+                    location.reload();
+                } else {
+                    alert('Error updating staff');
+                }
+            });
+                // Restore the original dropdown menu
+                restoreDropdown(row);
+        });
+
+        function restoreDropdown(row) {
+            var cells = row.find('td:not(:last-child, :first-child)'); // Exclude the action cell and the first cell (patient_id)
+
+            cells.each(function(index) {
+                var cell = $(this);
+                var input = cell.find('input, select'); // Find input or select elements in the cell
+
+                if (input.length > 0) { // If input or select element is found
+                    cell.text(input.val()); // Set cell text to the input/select value
+                }
+            });
+
+            var lastCell = row.find('td:last-child');
+            lastCell.empty(); // Clear the action cell
+
+            var dropdown = $('<div></div>').addClass('dropdown');
+            var dropdownButton = $('<button></button>')
+                .addClass('btn btn-secondary dropdown-toggle')
+                .attr('type', 'button')
+                .attr('data-toggle', 'dropdown')
+                .attr('aria-haspopup', 'true')
+                .attr('aria-expanded', 'false')
+                .text('...');
+            dropdown.append(dropdownButton);
+
+            var dropdownMenu = $('<div></div>').addClass('dropdown-menu');
+
+            // Create "Edit" button
+            var editButton = $('<button></button>')
+                .addClass('dropdown-item edit-button')
+                .attr('type', 'button')
+                .text('Edit');
+            dropdownMenu.append(editButton);
+
+            // Create "Delete" form
+            var deleteForm = $('<form></form>')
+                .attr('action', '/delete_patient')
+                .attr('method', 'post');
+            deleteForm.append($('<input>').attr('type', 'hidden').attr('name', 'patient_id').attr('value', row.find('td:first-child').text()));
+            deleteForm.append($('<button>').addClass('dropdown-item').attr('type', 'submit').text('Delete'));
+            dropdownMenu.append(deleteForm);
+
+            dropdown.append(dropdownMenu);
+            lastCell.append(dropdown);
+        }
+        $('#search-staff').on('input', function() {
+        var searchValue = $(this).val().toLowerCase();
+
+        // Filter the table rows, excluding the header row
+        $('#staff-table tbody tr').each(function() {
+            var staffData = $(this).text().toLowerCase();
+            if (staffData.indexOf(searchValue) > -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+    </script>
+
+</body>
+</html>
